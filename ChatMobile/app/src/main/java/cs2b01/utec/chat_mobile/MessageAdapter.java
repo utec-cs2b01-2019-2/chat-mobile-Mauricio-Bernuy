@@ -11,6 +11,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
     public JSONArray elements;
@@ -47,11 +49,25 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position){
+        try{
+            JSONObject element = elements.getJSONObject(position);
+            String mFirstLine = element.getString("content");
+            int userFromId = element.getInt("user_from_id");
 
+            if(userFromId == this.userFromId){
+                holder.myLine.setText(mFirstLine);
+                holder.friendLine.setText("");
+            }else{
+                holder.myLine.setText("");
+                holder.friendLine.setText(mFirstLine);
+            }
+        }catch(JSONException e){
+            e.printStackTrace();
+        }
     }
 
     @Override
     public int getItemCount(){
-        return 0;
+        return elements.length();
     }
 }
